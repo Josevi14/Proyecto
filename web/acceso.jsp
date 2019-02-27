@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : 26-feb-2019, 14:39:03
+    Document   : acceso
+    Created on : 27-feb-2019, 18:52:21
     Author     : josev
 --%>
 
@@ -9,7 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Hotel Bella Vista</title>
+        <title>Acceso Hotel</title>
     </head>
     <body>
         

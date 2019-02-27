@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +17,12 @@ import javax.servlet.http.HttpServletResponse;
  * @author josev
  */
 public class hotel extends HttpServlet {
-
+    
+    @Override
+    public void init(){
+        
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
