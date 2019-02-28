@@ -12,6 +12,19 @@
         <title>Acceso Hotel</title>
     </head>
     <body>
-        
+        <%
+            String mensaje;
+            mensaje = (String) session.getAttribute("error");
+            if (mensaje != null) {
+                out.print(mensaje);
+                session.removeAttribute("error");
+            }
+        %>
+        <form action="hotel" method="post" enctype="multipart/form-data">
+            <input type="text" name="login" placeholder="login"/>
+            <input type="password" name="password" placeholder="password"/>
+            <input type="submit" name="accion" value="Acceder"/>
+            <input type="submit" name="accion" value="Registrar"/>
+        </form>
     </body>
 </html>

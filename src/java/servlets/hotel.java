@@ -5,24 +5,47 @@
  */
 package servlets;
 
+import clases.UsuarioDB;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author josev
  */
 public class hotel extends HttpServlet {
-    
+
+    private Connection conexion;
+    private final String url = "jdbc:mysql://localhost/hotel";
+    private final String user = "root";
+    private final String password = "";
+
     @Override
-    public void init(){
-        
+    public void init() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conexion = DriverManager.getConnection(url, user, password);
+            UsuarioDB.conectar(conexion);
+            // getServletContext()
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,18 +57,63 @@ public class hotel extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet hotel</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet hotel at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+        HttpSession sesion;
+        String url = null;
+
+        sesion = request.getSession();
+        String accion = request.getParameter("accion");
+        if (accion != null) {
+            accion = accion.toUpperCase().replaceAll(" ", "");
+            switch (accion) {
+                case "ACCEDER":
+                    try {
+                        boolean ok;
+                        int tipo;
+                        ok = UsuarioDB.acceder(request);
+                        if (ok) {
+                            sesion.setAttribute("usuario", request.getParameter("login"));
+                            tipo = 1;//(int) request.getAttribute("tipo");
+                            if (tipo == 1) {
+                                url = "/index.jsp";
+                            } else if (tipo == 2) {
+                                url = "/menuRecepcion.jsp";
+                            } else {
+                                url = "/menuAdmin.jsp";
+                            }
+                        } else {
+                            // Preparamos el mensaje a través de la sesión
+                            sesion.setAttribute("error", "Usuario incorrecto");
+                            url = "/acceso.jsp";
+                        }
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        url = "/error.jsp";
+                    }
+                    break;
+                case "REGISTRAR":
+                    break;
+            }
+        }
+        
+        RequestDispatcher rd = request.getRequestDispatcher(url);
+        rd.forward(request, response);
+    }
+
+    public static String getMD5(String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes());
+            BigInteger number = new BigInteger(1, messageDigest);
+            String hashtext = number.toString(16);
+
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 
