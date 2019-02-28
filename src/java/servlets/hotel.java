@@ -5,9 +5,10 @@
  */
 package servlets;
 
+import clases.HabitacionDB;
+import clases.Usuario;
 import clases.UsuarioDB;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +41,7 @@ public class hotel extends HttpServlet {
             Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection(url, user, password);
             UsuarioDB.conectar(conexion);
+            HabitacionDB.conectar(conexion);
             // getServletContext()
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,11 +60,12 @@ public class hotel extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String accion;
         HttpSession sesion;
-        String url = null;
+        String url = "";
 
         sesion = request.getSession();
-        String accion = request.getParameter("accion");
+        accion = request.getParameter("accion");
         if (accion != null) {
             accion = accion.toUpperCase().replaceAll(" ", "");
             switch (accion) {
@@ -73,13 +76,19 @@ public class hotel extends HttpServlet {
                         ok = UsuarioDB.acceder(request);
                         if (ok) {
                             sesion.setAttribute("usuario", request.getParameter("login"));
-                            tipo = 1;//(int) request.getAttribute("tipo");
-                            if (tipo == 1) {
-                                url = "/index.jsp";
-                            } else if (tipo == 2) {
-                                url = "/menuRecepcion.jsp";
-                            } else {
-                                url = "/menuAdmin.jsp";
+                            tipo = (int) request.getAttribute("tipo");
+                            sesion.setAttribute("tipo", tipo);
+
+                            switch (tipo) {
+                                case 1:
+                                    url = "/index.jsp";
+                                    break;
+                                case 2:
+                                    url = "/menuRecepcion.jsp";
+                                    break;
+                                default:
+                                    url = "/menuAdmin.jsp";
+                                    break;
                             }
                         } else {
                             // Preparamos el mensaje a través de la sesión
@@ -92,11 +101,20 @@ public class hotel extends HttpServlet {
                         url = "/error.jsp";
                     }
                     break;
+                case "REGISTRO":
+                    url = "/registro.jsp";
+                    break;
                 case "REGISTRAR":
+                    try {
+                        UsuarioDB.registrar(request);
+                        url = "/acceso.jsp";
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
             }
         }
-        
+
         RequestDispatcher rd = request.getRequestDispatcher(url);
         rd.forward(request, response);
     }

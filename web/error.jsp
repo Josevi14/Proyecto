@@ -12,6 +12,6 @@
         <title>Error page</title>
     </head>
     <body>
-        <h1>Ha ocurrido un error</h1>
+        <h1>Ha ocurrido una excepcion</h1>
     </body>
 </html>

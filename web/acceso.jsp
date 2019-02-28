@@ -20,11 +20,11 @@
                 session.removeAttribute("error");
             }
         %>
-        <form action="hotel" method="post" enctype="multipart/form-data">
-            <input type="text" name="login" placeholder="login"/>
-            <input type="password" name="password" placeholder="password"/>
+        <form action="hotel" method="post">
+            <input type="text" name="login" placeholder="Login"/>
+            <input type="password" name="password" placeholder="Password"/>
             <input type="submit" name="accion" value="Acceder"/>
-            <input type="submit" name="accion" value="Registrar"/>
+            <input type="submit" name="accion" value="Registro"/>
         </form>
     </body>
 </html>

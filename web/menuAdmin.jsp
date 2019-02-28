@@ -1,3 +1,13 @@
+<%
+    int tipo;
+    String login;
+    login = (String) session.getAttribute("usuario");
+    tipo = (Integer) session.getAttribute("tipo");
+    
+    if(login == null || tipo != 3){
+        response.sendRedirect("acceso.jsp");
+    }
+%>
 <%-- 
     Document   : menuAdmin
     Created on : 28-feb-2019, 12:32:19
