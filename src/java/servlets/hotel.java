@@ -8,6 +8,7 @@ package servlets;
 import clases.HabitacionDB;
 import clases.Usuario;
 import clases.UsuarioDB;
+import clases.tipoHabitacionDB;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -42,6 +43,7 @@ public class hotel extends HttpServlet {
             conexion = DriverManager.getConnection(url, user, password);
             UsuarioDB.conectar(conexion);
             HabitacionDB.conectar(conexion);
+            tipoHabitacionDB.conectar(conexion);
             // getServletContext()
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,6 +113,9 @@ public class hotel extends HttpServlet {
                     } catch (SQLException ex) {
                         Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    break;
+                case "RESERVAR":
+                    url = "/menuReservas.jsp";
                     break;
             }
         }

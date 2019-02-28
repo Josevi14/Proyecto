@@ -27,6 +27,8 @@
                 <th>Id</th>
                 <th>Numero</th>
                 <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Precio por Dia</th>
             </tr>
             <jsp:include page="vistaHabitaciones.jsp"></jsp:include>
         </table>

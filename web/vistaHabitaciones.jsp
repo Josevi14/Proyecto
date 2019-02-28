@@ -3,6 +3,8 @@
     Created on : 28-feb-2019, 16:58:07
     Author     : josev
 --%>
+<%@page import="clases.tipoHabitacion"%>
+<%@page import="clases.tipoHabitacionDB"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="clases.Habitacion"%>
@@ -13,24 +15,31 @@
 <%
     ResultSet rs;
     ArrayList<Habitacion> habitaciones = new ArrayList<Habitacion>();
-    Iterator it = habitaciones.iterator();
     rs = HabitacionDB.leerHabitaciones();
-
+    rs.beforeFirst();
+    
     while (rs.next()) {
-        Habitacion habitacion;
-        habitacion = HabitacionDB.rowToRoom(rs);
+        Habitacion habitacion = HabitacionDB.rowToRoom(rs);
         habitaciones.add(habitacion);
     }
-
+    
+    Iterator it = habitaciones.iterator();
     while (it.hasNext()) {
         Habitacion h = (Habitacion) it.next();
-        %>
-        <tr>
-            <td><%=h.getIdHabitacion()%></td>
-            <td><%=h.getNumero()%></td>
-            <td><%=h.getTipo()%></td>
-        </tr>
+        tipoHabitacion tH = tipoHabitacionDB.consultarTipo(h);
 
+        %>
+        <form action="hotel" method="post">
+            <tr>
+                <td><%=h.getIdHabitacion()%></td>
+                <td><%=h.getNumero()%></td>
+                <td><%=tH.getNombre()%></td>
+                <td><%=tH.getDescripcion()%></td>
+                <td><%=tH.getPrecioDia()%></td>
+                <td><input type="submit" name="accion" value="Reservar"/></td>
+            <input type="hidden" name="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
+            </tr>
+        </form>
         <%
     }
 %>
