@@ -12,6 +12,21 @@
         <title>Reservar una habitacion</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <table>
+               <form action="hotel" method="post">
+                   <tr>
+                       <td><label for="fechaEntrada">Fecha Entrada: </label></td>
+                       <td><input type="date" name="fechaEntrada"</td>
+                   </tr>
+                   <tr>
+                       <td><label for="fechaSalida">Fecha Salida: </label></td>
+                       <td><input type="date" name="fechaSalida"</td>
+                   </tr>
+                   <tr>
+                       <td><input type="submit" name="accion" value="Reservar"</td>
+                   </tr>
+                </form> 
+        </table>
+        
     </body>
 </html>

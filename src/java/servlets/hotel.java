@@ -115,7 +115,7 @@ public class hotel extends HttpServlet {
                     }
                     break;
                 case "RESERVAR":
-                    url = "/menuReservas.jsp";
+                    url = "/index.jsp";
                     break;
             }
         }

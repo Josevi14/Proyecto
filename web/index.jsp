@@ -19,9 +19,31 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="js/jquery.js"></script>
+        <script src="js/index.js"></script>
         <title>Hotel Bella Vista</title>
     </head>
     <body>
+        <label>Desde</label>
+        <select id="diaEntrada">
+            
+        </select>
+        <select id="mesEntrada">
+            
+        </select>
+        <select id="anioEntrada">
+            
+        </select><br/><br/>
+        <label>Hasta</label>
+        <select id="diaSalida">
+            
+        </select>
+        <select id="mesSalida">
+            
+        </select>
+        <select id="anioSalida">
+            
+        </select>
         <table>
             <tr>
                 <th>Id</th>

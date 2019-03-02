@@ -24,13 +24,13 @@
     }
     
     Iterator it = habitaciones.iterator();
+    int contador = 1;
     while (it.hasNext()) {
         Habitacion h = (Habitacion) it.next();
         tipoHabitacion tH = tipoHabitacionDB.consultarTipo(h);
-
         %>
         <form action="hotel" method="post">
-            <tr>
+            <tr id="<%=contador%>">
                 <td><%=h.getIdHabitacion()%></td>
                 <td><%=h.getNumero()%></td>
                 <td><%=tH.getNombre()%></td>
@@ -38,9 +38,11 @@
                 <td><%=tH.getPrecioDia()%></td>
                 <td><input type="submit" name="accion" value="Reservar"/></td>
             <input type="hidden" name="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
+            <input type="hidden" name="precioDia" value="<%=tH.getPrecioDia()%>"/>
             </tr>
         </form>
         <%
+            contador++;
     }
 %>
 
