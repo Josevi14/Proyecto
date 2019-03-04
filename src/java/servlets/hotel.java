@@ -10,12 +10,17 @@ import clases.Usuario;
 import clases.UsuarioDB;
 import clases.tipoHabitacionDB;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -65,6 +70,7 @@ public class hotel extends HttpServlet {
         String accion;
         HttpSession sesion;
         String url = "";
+        PrintWriter out = response.getWriter();
 
         sesion = request.getSession();
         accion = request.getParameter("accion");
@@ -112,10 +118,16 @@ public class hotel extends HttpServlet {
                         url = "/acceso.jsp";
                     } catch (SQLException ex) {
                         Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        url = "/error.jsp";
                     }
                     break;
                 case "RESERVAR":
-                    url = "/index.jsp";
+                    try {
+                        HabitacionDB.alquilarHabitacion(request);
+                        url = "/index.jsp";
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
             }
         }

@@ -17,32 +17,33 @@
     ArrayList<Habitacion> habitaciones = new ArrayList<Habitacion>();
     rs = HabitacionDB.leerHabitaciones();
     rs.beforeFirst();
-    
+
     while (rs.next()) {
         Habitacion habitacion = HabitacionDB.rowToRoom(rs);
         habitaciones.add(habitacion);
     }
-    
+
     Iterator it = habitaciones.iterator();
-    int contador = 1;
     while (it.hasNext()) {
         Habitacion h = (Habitacion) it.next();
         tipoHabitacion tH = tipoHabitacionDB.consultarTipo(h);
-        %>
-        <form action="hotel" method="post">
-            <tr id="<%=contador%>">
-                <td><%=h.getIdHabitacion()%></td>
-                <td><%=h.getNumero()%></td>
-                <td><%=tH.getNombre()%></td>
-                <td><%=tH.getDescripcion()%></td>
-                <td><%=tH.getPrecioDia()%></td>
-                <td><input type="submit" name="accion" value="Reservar"/></td>
-            <input type="hidden" name="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
-            <input type="hidden" name="precioDia" value="<%=tH.getPrecioDia()%>"/>
-            </tr>
-        </form>
-        <%
-            contador++;
+%>
+<form action="hotel" method="post" id="<%=h.getIdHabitacion()%>">
+    <tr id="<%=h.getIdHabitacion()%>">
+        <td><%=h.getIdHabitacion()%></td>
+        <td><%=h.getNumero()%></td>
+        <td><%=tH.getNombre()%></td>
+        <td><%=tH.getDescripcion()%></td>
+        <td><%=tH.getPrecioDia()%></td>
+        <td><input type="date" name="fechaEntrada" id="fechaEntrada<%=h.getIdHabitacion()%>"/></td>
+        <td><input type="date" name="fechaSalida" id="fechaSalida<%=h.getIdHabitacion()%>"/></td>
+        <td><input type="submit" name="accion" value="Reservar" id="reservar<%=h.getIdHabitacion()%>"/></td>
+        <input type="hidden" name="idHabitacion" id="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
+        <input type="hidden" name="precioDia" id="precioDia" value="<%=tH.getPrecioDia()%>"/>
+        <input type="hidden" name="accion" value="Reservar"/>
+    </tr>
+</form>
+<%
     }
 %>
 

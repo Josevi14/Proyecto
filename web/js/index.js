@@ -1,74 +1,60 @@
-window.onload = initJS;
+$(init);
 
-function initJS(){
-    var selectDiaEntrada = document.getElementById("diaEntrada");
-    var selectDiaSalida = document.getElementById("diaSalida");
-    var selectMesEntrada = document.getElementById("mesEntrada");
-    var selectMesSalida = document.getElementById("mesSalida");
-    var selectAnioEntrada = document.getElementById("anioEntrada");
-    var selectAnioSalida = document.getElementById("anioSalida");
-    
-    var meses = "Enero, Febrero, Marzo, Abril, Mayo, Junio, Julio, Agosto, Septiembre, Octubre, Noviembre, Diciembre";
-    meses = meses.split(",");
-    var anios = "2019, 2020, 2021";
-    anios = anios.split(",");
-    
-    for(var i = 1; i <= 31; i++){
-        var option = document.createElement("option");
-        var texto = document.createTextNode(i);
-        option.appendChild(texto);
-        var option2 = document.createElement("option");
-        var texto2 = document.createTextNode(i);
-        option2.appendChild(texto2);
-        selectDiaEntrada.appendChild(option);
-        selectDiaSalida.appendChild(option2);
+function init() {
+    var trs = document.getElementsByTagName("tr");
+    for (var i = 1; i < trs.length; i++) {
+        $("#fechaEntrada"+i).change(consultaFechas);
+        $("#fechaSalida"+i).change(consultaFechas);
     }
-    
-    for(var i = 0; i < meses.length; i++){
-        var option = document.createElement("option");
-        var texto = document.createTextNode(meses[i]);
-        option.appendChild(texto);
-        var option2 = document.createElement("option");
-        var texto2 = document.createTextNode(meses[i]);
-        option2.appendChild(texto2);
-        selectMesEntrada.appendChild(option);
-        selectMesSalida.appendChild(option2);
-    }
-    
-    for(var i = 0; i < anios.length; i++){
-        var option = document.createElement("option");
-        var texto = document.createTextNode(anios[i]);
-        option.appendChild(texto);
-        var option2 = document.createElement("option");
-        var texto2 = document.createTextNode(anios[i]);
-        option2.appendChild(texto2);
-        selectAnioEntrada.appendChild(option);
-        selectAnioSalida.appendChild(option2);
-    }
-    initJquery();
-}
 
-function initJquery(){
-    $("#diaEntrada").click(function(){
-        consultaFechas();
-    });
-    $("#diaSalida").click(function(){
-        consultaFechas();
-    });
-    $("#mesEntrada").click(function(){
-        consultaFechas();
-    });
-    $("#mesSalida").click(function(){
-        consultaFechas();
-    });
-    $("#anioEntrada").click(function(){
-        consultaFechas();
-    });
-    $("#anioSalida").click(function(){
-        consultaFechas();
+    $("input[name=accion]").click(function (event) {
+        event.preventDefault();
+        var id = $(this).attr("id");
+        id = id.substring(id.length - 1);
+        anadirDias(id);
+        $("form#" + id).submit();
     });
 }
 
-function consultaFechas(){
+function consultaFechas() {
+    var id = $(this).attr("id");
+    var idHabitacion = $(this).parent().parent().attr("id");
+    id = id.substring(id.length - 1);
+    $("#reservar"+id).css("display","block");
+    var strFechaEntrada = $("#fechaEntrada"+id).val();
+    var strFechaSalida = $("#fechaSalida"+id).val();
+    var fechaEntrada = new Date($("#fechaEntrada"+id).val()).getTime();
+    var fechaSalida = new Date($("#fechaSalida"+id).val()).getTime();
     
+    $.post("compararFecha.jsp", {
+        idHabitacion: idHabitacion
+    }, function (result){
+        comprobarFechas(id, fechaEntrada, fechaSalida, result);
+    }, "json");
+}
+
+function comprobarFechas(id, fechaEntrada, fechaSalida, result){
+    var submit = $("#reservar"+id);
+    for(var i = 0; i < result.length; i++){
+        var fEntrada = new Date(result[i].fechaEntrada).getTime();
+        var fSalida = new Date(result[i].fechaSalida).getTime();
+        if((fechaEntrada >= fEntrada && fechaEntrada <= fSalida) || (fechaSalida <= fSalida && fechaSalida >= fEntrada)){
+            submit.css("display","none");
+        }
+    }
+}
+
+function anadirDias(id) {
+    var fechaEntrada = new Date($("#fechaEntrada" + id).val()).getTime();
+    var fechaSalida = new Date($("#fechaSalida" + id).val()).getTime();
+    var diff = fechaSalida - fechaEntrada;
+    var diferencia = diff / (1000 * 60 * 60 * 24);
+
+    var fila = document.getElementById(id);
+
+    var input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "dias");
+    input.setAttribute("value", diferencia);
+    fila.appendChild(input);
 }
