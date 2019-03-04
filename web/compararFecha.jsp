@@ -3,6 +3,7 @@
     Created on : 03-mar-2019, 13:28:19
     Author     : josev
 --%>
+<%@page import="clases.AlquilerDB"%>
 <%@page import="org.json.simple.JSONArray"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="clases.HabitacionDB"%>
@@ -14,8 +15,7 @@
 <%
     int idHabitacion = Integer.valueOf(request.getParameter("idHabitacion"));
     ResultSet rs;
-    rs = HabitacionDB.leerFechas(idHabitacion);
-    rs.beforeFirst();
+    rs = AlquilerDB.leerFechas(idHabitacion);
     
     JSONArray jarray = new JSONArray();
     while(rs.next()){

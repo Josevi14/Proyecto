@@ -13,16 +13,7 @@
 <%@page import="java.sql.ResultSet"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    ResultSet rs;
-    ArrayList<Habitacion> habitaciones = new ArrayList<Habitacion>();
-    rs = HabitacionDB.leerHabitaciones();
-    rs.beforeFirst();
-
-    while (rs.next()) {
-        Habitacion habitacion = HabitacionDB.rowToRoom(rs);
-        habitaciones.add(habitacion);
-    }
-
+    ArrayList<Habitacion> habitaciones = HabitacionDB.leerHabitaciones();
     Iterator it = habitaciones.iterator();
     while (it.hasNext()) {
         Habitacion h = (Habitacion) it.next();
@@ -46,4 +37,3 @@
 <%
     }
 %>
-

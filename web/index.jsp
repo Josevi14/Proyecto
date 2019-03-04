@@ -24,6 +24,10 @@
         <title>Hotel Bella Vista</title>
     </head>
     <body>
+        <form action="hotel" method="post">
+            <input type="submit" name="accion" value="Mis Reservas"/>
+            <input type="submit" name="accion" value="Cerrar Sesion"/>
+        </form>
         <table id="table">
             <tr>
                 <th>Id</th>

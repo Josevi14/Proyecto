@@ -26,25 +26,22 @@ public class HabitacionDB {
         HabitacionDB.conexion = conexion;
     }
 
-    public static ResultSet leerHabitaciones() throws SQLException {
+    public static ArrayList<Habitacion> leerHabitaciones() throws SQLException {
+        ArrayList<Habitacion> habitaciones = new ArrayList<>();
         ResultSet rs;
         Statement sentencia = conexion.createStatement();
 
         String sql = "SELECT * FROM habitaciones";
         rs = sentencia.executeQuery(sql);
 
-        return rs;
-    }
-    
-    public static ResultSet leerFechas(int idHabitacion) throws SQLException {
-        ResultSet rs;
-        Statement sentencia = conexion.createStatement();
+        while (rs.next()) {
+            habitaciones.add(rowToRoom(rs));
+        }
+
+        rs.close();
+        sentencia.close();
         
-        String sql = "SELECT fechaEntrada, fechaSalida FROM alquiler WHERE habitacion='"+idHabitacion+"'";
-        rs = sentencia.executeQuery(sql);
-        rs.first();
-        
-        return rs;
+        return habitaciones;
     }
 
     public static Habitacion rowToRoom(ResultSet rs) throws SQLException {
@@ -53,26 +50,25 @@ public class HabitacionDB {
         id = rs.getInt("idHabitacion");
         numero = rs.getInt("numero");
         tipo = rs.getInt("tipo");
+
         Habitacion habitacion = new Habitacion(id, numero, tipo);
         return habitacion;
     }
 
-    public static void alquilarHabitacion(HttpServletRequest request) throws SQLException {
-        HttpSession sesion = request.getSession();
-        String strFechaEntrada = request.getParameter("fechaEntrada");//Este
-        String strFechaSalida = request.getParameter("fechaSalida");//Este
-        
-        String login = (String) sesion.getAttribute("usuario");//Este
-        int habitacion = Integer.valueOf(request.getParameter("idHabitacion"));//Este
-        int precioDia = Integer.valueOf(request.getParameter("precioDia"));
-        int dias = Integer.valueOf(request.getParameter("dias"));
-        int precioTotal = precioDia*dias;//Este
-
+    public static Habitacion consultarHabitacion(Alquiler a) throws SQLException {
+        ResultSet rs;
+        Habitacion h;
         Statement sentencia = conexion.createStatement();
 
-        String sql = "INSERT INTO alquiler(fechaEntrada, fechaSalida, costoTotal, usuario, habitacion) VALUES('"+strFechaEntrada+"', '"+strFechaSalida+"', '"+precioTotal+"', '"+login+"', '"+habitacion+"')";
-        sentencia.executeUpdate(sql);
+        String sql = "SELECT * FROM habitaciones WHERE idHabitacion = '" + a.getHabitacion() + "'";
+        rs = sentencia.executeQuery(sql);
+        rs.absolute(1);
+        h = rowToRoom(rs);
+
+        rs.close();
+        sentencia.close();
+
+        return h;
     }
-    
-    
+
 }

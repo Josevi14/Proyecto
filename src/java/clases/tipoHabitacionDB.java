@@ -26,7 +26,7 @@ public class tipoHabitacionDB {
         tipoHabitacion tipo;
         Statement sentencia = conexion.createStatement();
         
-        String sql = "SELECT * FROM tipohabitacion where idTipo = '"+h.getTipo()+"'";
+        String sql = "SELECT * FROM tipohabitacion WHERE idTipo = '"+h.getTipo()+"'";
         rs = sentencia.executeQuery(sql);
         tipo = rowToTypeRoom(rs);
         

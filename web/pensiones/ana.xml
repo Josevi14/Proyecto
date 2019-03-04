@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<alquileres>
+    <alquiler>
+        <idAlquiler>1</idAlquiler>
+        <fechaEntrada>2019-03-14</fechaEntrada>
+        <fechaSalida>2019-03-16</fechaSalida>
+        <costoTotal>140</costoTotal>
+        <habitacion>100</habitacion>
+    </alquiler>
+    <alquiler>
+        <idAlquiler>2</idAlquiler>
+        <fechaEntrada>2019-03-26</fechaEntrada>
+        <fechaSalida>2019-03-30</fechaSalida>
+        <costoTotal>480</costoTotal>
+        <habitacion>101</habitacion>
+    </alquiler>
+</alquileres>

@@ -7,7 +7,7 @@ function init() {
         $("#fechaSalida"+i).change(consultaFechas);
     }
 
-    $("input[name=accion]").click(function (event) {
+    $("input[value=Reservar]").click(function (event) {
         event.preventDefault();
         var id = $(this).attr("id");
         id = id.substring(id.length - 1);
@@ -21,8 +21,6 @@ function consultaFechas() {
     var idHabitacion = $(this).parent().parent().attr("id");
     id = id.substring(id.length - 1);
     $("#reservar"+id).css("display","block");
-    var strFechaEntrada = $("#fechaEntrada"+id).val();
-    var strFechaSalida = $("#fechaSalida"+id).val();
     var fechaEntrada = new Date($("#fechaEntrada"+id).val()).getTime();
     var fechaSalida = new Date($("#fechaSalida"+id).val()).getTime();
     
@@ -38,7 +36,7 @@ function comprobarFechas(id, fechaEntrada, fechaSalida, result){
     for(var i = 0; i < result.length; i++){
         var fEntrada = new Date(result[i].fechaEntrada).getTime();
         var fSalida = new Date(result[i].fechaSalida).getTime();
-        if((fechaEntrada >= fEntrada && fechaEntrada <= fSalida) || (fechaSalida <= fSalida && fechaSalida >= fEntrada)){
+        if((fechaEntrada >= fEntrada && fechaEntrada <= fSalida) || (fechaSalida <= fSalida && fechaSalida >= fEntrada) || (fechaEntrada <= fEntrada && fechaSalida >= fSalida)){
             submit.css("display","none");
         }
     }
