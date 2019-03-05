@@ -20,32 +20,38 @@
         <title>Mis Reservas</title>
     </head>
     <body>
+        <form action="hotel" method="post">
+            <input type="submit" name="accion" value="Importar como XML"/>
+            <input type="submit" name="accion" value="Volver"/>
+        </form>
         <table>
+
+            <%
+                ArrayList<Alquiler> alquileres = AlquilerDB.mostrarReservas(request);
+                hotel.exportarXML(alquileres, response, session);
+                if (request.getAttribute("array") != null) {
+            %>
             <tr>
-                <th>Id</th>
+                <th>Habitacion</th>
                 <th>Fecha Entrada</th>
                 <th>Fecha Salida</th>
                 <th>Coste Total</th>
-                <th>Habitacion</th>
             </tr>
             <%
-                ArrayList<Alquiler> alquileres = AlquilerDB.mostrarReservas(request);
-                ArrayList<Alquiler> array;
-                hotel.exportarXML(alquileres, response, session);
-                array = hotel.importarXML(session);
-
+                ArrayList<Alquiler> array = (ArrayList) request.getAttribute("array");
                 Iterator it = array.iterator();
+
                 while (it.hasNext()) {
                     Alquiler a = (Alquiler) it.next();
             %>
             <tr>
-                <td><%=a.getIdAlquiler()%></td>
+                <td><%=a.getHabitacion()%></td>
                 <td><%=a.getFechaEntrada()%></td>
                 <td><%=a.getFechaSalida()%></td>
                 <td><%=a.getCostoTotal()%></td>
-                <td><%=a.getHabitacion()%></td>
             </tr>
             <%
+                    }
                 }
             %>
             <%--<form action="hotel" method="post">

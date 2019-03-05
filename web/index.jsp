@@ -30,8 +30,8 @@
         </form>
         <table id="table">
             <tr>
-                <th>Id</th>
                 <th>Numero</th>
+                <th></th>
                 <th>Tipo</th>
                 <th>Descripcion</th>
                 <th>Precio por Dia</th>

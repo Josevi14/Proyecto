@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -33,16 +34,38 @@ public class tipoHabitacionDB {
         return tipo;
     }
     
+    public static ArrayList<tipoHabitacion> consultarTipos() throws SQLException{
+        ArrayList<tipoHabitacion> tipos = new ArrayList<>();
+        ResultSet rs;
+        Statement sentencia = conexion.createStatement();
+        
+        String sql = "SELECT * FROM tipohabitacion";
+        rs = sentencia.executeQuery(sql);
+        
+        while(rs.next()){
+            tipoHabitacion tipo;
+            int id = rs.getInt("idTipo");
+            String nombre = rs.getString("nombre");
+            String descripcion = rs.getString("descripcion");
+            int precioDia = rs.getInt("precioDia");
+            tipo = new tipoHabitacion(id, nombre, descripcion, precioDia);
+            tipos.add(tipo);
+        }
+                
+        return tipos;
+    }
+    
     public static tipoHabitacion rowToTypeRoom(ResultSet rs) throws SQLException {
         int id, precio;
-        String nombre, descripcion;
+        String nombre, descripcion, imagen;
         rs.first();
         
         id = rs.getInt("idTipo");
         nombre = rs.getString("nombre");
         descripcion = rs.getString("descripcion");
+        imagen = rs.getString("imagen");
         precio = rs.getInt("precioDia");
-        tipoHabitacion tipoHabitacion = new tipoHabitacion(id, nombre, descripcion, precio);
+        tipoHabitacion tipoHabitacion = new tipoHabitacion(id, nombre, descripcion, imagen, precio);
         return tipoHabitacion;
     }
 }

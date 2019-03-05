@@ -1,8 +1,9 @@
 <%-- 
-    Document   : vistaHabitaciones
-    Created on : 28-feb-2019, 16:58:07
+    Document   : vistaHabitacionesRecepcion
+    Created on : 05-mar-2019, 17:09:16
     Author     : josev
 --%>
+
 <%@page import="java.io.File"%>
 <%@page import="clases.tipoHabitacion"%>
 <%@page import="clases.tipoHabitacionDB"%>
@@ -27,9 +28,7 @@
         <td><%=tH.getNombre()%></td>
         <td><%=tH.getDescripcion()%></td>
         <td><%=tH.getPrecioDia()%></td>
-        <td><input type="date" name="fechaEntrada" id="fechaEntrada<%=h.getIdHabitacion()%>"/></td>
-        <td><input type="date" name="fechaSalida" id="fechaSalida<%=h.getIdHabitacion()%>"/></td>
-        <td><input type="submit" name="accion" value="Reservar" id="reservar<%=h.getIdHabitacion()%>"/></td>
+        <td><input type="submit" name="accion" value="Editar"/></td>
         <input type="hidden" name="idHabitacion" id="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
         <input type="hidden" name="precioDia" id="precioDia" value="<%=tH.getPrecioDia()%>"/>
         <input type="hidden" name="accion" value="Reservar"/>

@@ -70,5 +70,18 @@ public class HabitacionDB {
 
         return h;
     }
+    
+    public static void actualizarHabitacion(HttpServletRequest request) throws SQLException{
+        int numero = Integer.valueOf(request.getParameter("numero"));
+        String cadena = request.getParameter("tipo");
+        int tipo = Integer.valueOf(cadena.substring(0, 1));
+        int idHabitacion = Integer.valueOf(request.getParameter("idHabitacion"));
+        
+        Statement sentencia = conexion.createStatement();
+        
+        String sql = "UPDATE habitaciones SET numero = '" + numero + "',tipo = '" + tipo +"' WHERE idHabitacion = '" + idHabitacion + "'";
+        sentencia.executeUpdate(sql);
+        sentencia.close();
+    }
 
 }

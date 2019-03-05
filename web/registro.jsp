@@ -16,23 +16,18 @@
             <table>
                 <tr>
                     <td><input type="text" name="login" placeholder="Login"/></td>
-
                 </tr>
                 <tr>
                     <td><input type="password" name="password" placeholder="Password"/></td>
-
                 </tr>
                 <tr>
                     <td><input type="text" name="nombre" placeholder="Nombre"/></td>
-
                 </tr>
                 <tr>
                     <td><input type="text" name="apellidos" placeholder="Apellidos"/></td>
-
                 </tr>
                 <tr>
                     <td><input type="text" name="telefono" placeholder="Telefono"/></td>
-
                 </tr>
                 <tr>
                     <td><input type="submit" name="accion" value="Registrar"</td>

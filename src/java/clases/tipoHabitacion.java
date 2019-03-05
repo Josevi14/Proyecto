@@ -13,12 +13,21 @@ public class tipoHabitacion {
     private int id;
     private String nombre;
     private String descripcion;
+    private String imagen;
     private int precioDia;
 
     public tipoHabitacion(int id, String nombre, String descripcion, int precioDia) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.precioDia = precioDia;
+    }
+    
+    public tipoHabitacion(int id, String nombre, String descripcion, String imagen, int precioDia) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.imagen = imagen;
         this.precioDia = precioDia;
     }
 
@@ -53,6 +62,13 @@ public class tipoHabitacion {
     public void setPrecioDia(int precioDia) {
         this.precioDia = precioDia;
     }
-    
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     
 }

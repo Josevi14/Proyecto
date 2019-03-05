@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -58,7 +59,7 @@ public class hotel extends HttpServlet {
 
     @Override
     public void init() {
-        ruta = this.getServletContext().getRealPath("/") + File.separator;
+        ruta = this.getServletContext().getRealPath("/");
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection(url, user, password);
@@ -153,6 +154,45 @@ public class hotel extends HttpServlet {
                     url = "/acceso.jsp";
                     request.getSession().invalidate();
                     break;
+                case "IMPORTARCOMOXML":
+                    try {
+                        ArrayList<Alquiler> array = importarXML(sesion);
+                        request.setAttribute("array", array);
+                        url = "/misReservas.jsp";
+                    } catch (SAXException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    break;
+                case "VOLVER":
+                    int tipo = (int) sesion.getAttribute("tipo");
+                    switch (tipo) {
+                        case 1:
+                            url = "/index.jsp";
+                            break;
+                        case 2:
+                            url = "/menuRecepcion.jsp";
+                            break;
+                        default:
+                            url = "/menuAdmin.jsp";
+                            break;
+                    }
+                    break;
+                case "EDITAR":
+                    url = "/editarHabitacion.jsp";
+                    break;
+                case "AGREGARHABITACION":
+                    url = "/agregarHabitacion.jsp";
+                    break;
+                case "ACEPTAR":
+
+                    try {
+                        HabitacionDB.actualizarHabitacion(request);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    url = "/menuRecepcion.jsp";
+                    break;
             }
         }
 
@@ -174,6 +214,19 @@ public class hotel extends HttpServlet {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String[] listarFicheros(String ruta) {
+        File folder = new File(ruta);
+        File[] listOfFiles = folder.listFiles();
+        String[] array = new String[listOfFiles.length];
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                array[i] = listOfFiles[i].getName();
+            }
+        }
+        return array;
     }
 
     public static void exportarXML(ArrayList<Alquiler> alquileres, HttpServletResponse response, HttpSession sesion) throws SQLException {
@@ -245,14 +298,14 @@ public class hotel extends HttpServlet {
             for (int i = 0; i < alquiler.getLength(); i++) {
                 Alquiler a;
                 NodeList hijos = alquiler.item(i).getChildNodes();
-                
+
                 int idAlquiler = Integer.valueOf(hijos.item(0).getFirstChild().getNodeValue());
                 String fechaEntrada = hijos.item(1).getFirstChild().getNodeValue();
                 String fechaSalida = hijos.item(2).getFirstChild().getNodeValue();
                 int costoTotal = Integer.valueOf(hijos.item(3).getFirstChild().getNodeValue());
                 int habitacion = Integer.valueOf(hijos.item(4).getFirstChild().getNodeValue());
                 String usuario = (String) sesion.getAttribute("usuario");
-                
+
                 a = new Alquiler(idAlquiler, fechaEntrada, fechaSalida, costoTotal, usuario, habitacion);
                 array.add(a);
             }
@@ -265,6 +318,56 @@ public class hotel extends HttpServlet {
 
     }
 
+    private boolean upload(HttpServletRequest request) throws ServletException {
+
+        boolean ok = true;
+
+        HttpSession sesion = request.getSession();
+        try {
+            Part fichero = request.getPart("fichero");
+            fichero.write(fichero.getSubmittedFileName());
+            sesion.setAttribute("error", "Nombre:" + fichero.getName() + "Fichero:" + fichero.getSubmittedFileName());
+        } catch (IOException ex) {
+            ok = false;
+            sesion.setAttribute("error", ex.getMessage());
+        }
+        return ok;
+    }
+
+    /*public static void generarPDF(HttpServletResponse response, Usuario usuario) throws DocumentException, FileNotFoundException, IOException{
+        Document documento = new Document(PageSize.A4, 50, 50, 100, 72);
+        FileOutputStream ficheroPdf = new FileOutputStream(ruta+"usuarios"+File.separator+usuario.getLogin()+File.separator+"curriculum.pdf");
+
+        PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+        documento.open();
+        documento.add(new Paragraph("Curriculum",
+                FontFactory.getFont("arial",   // fuente
+                22,                            // tamaño
+                Font.ITALIC)));
+        documento.add(new Paragraph("Nombre: "+usuario.getNombre()+" "+usuario.getApellidos()));
+        documento.add(new Paragraph("Edad: "+usuario.getEdad()));
+        documento.add(new Paragraph("Telefono: "+usuario.getTelefono()));
+        documento.add(new Paragraph("Direccion: "+usuario.getDireccion()));
+        documento.add(new Paragraph("Poblacion: "+usuario.getPoblacion()));
+        documento.add(new Paragraph("Provincia: "+usuario.getProvincia()));
+        documento.add(new Paragraph(" "));
+        PdfPTable tabla = new PdfPTable(3);
+        tabla.addCell("Descripcion");
+        tabla.addCell("Fecha Inicio");
+        tabla.addCell("Fecha Fin");
+        ArrayList<Experiencia> experiencias = usuario.getExperiencia();
+        Iterator iterador;
+        iterador = experiencias.iterator();
+        while (iterador.hasNext()){
+             Experiencia experiencia=(Experiencia) iterador.next();
+             tabla.addCell(experiencia.getCaracteristicas());
+             tabla.addCell(experiencia.getFecha_inicio());
+             tabla.addCell(experiencia.getFecha_final());
+        }
+        documento.add(tabla);
+        documento.close();
+
+    }*/
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

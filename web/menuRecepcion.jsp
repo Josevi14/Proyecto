@@ -3,8 +3,8 @@
     String login;
     login = (String) session.getAttribute("usuario");
     tipo = (Integer) session.getAttribute("tipo");
-    
-    if(login == null || tipo != 2){
+
+    if (login == null || tipo != 2) {
         response.sendRedirect("acceso.jsp");
     }
 %>
@@ -22,5 +22,19 @@
         <title>Menu Recepcion</title>
     </head>
     <body>
+        <form action="hotel" method="post">
+            <input type="submit" name="accion" value="Agregar Habitacion"/>
+            <input type="submit" name="accion" value="Cerrar Sesion"/>
+        </form>
+        <table id="table">
+            <tr>
+                <th>Numero</th>
+                <th></th>
+                <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Precio por Dia</th>
+            </tr>
+            <jsp:include page="vistaHabitacionesRecepcion.jsp"></jsp:include>
+        </table>
     </body>
 </html>
