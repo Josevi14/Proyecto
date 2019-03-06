@@ -83,5 +83,26 @@ public class HabitacionDB {
         sentencia.executeUpdate(sql);
         sentencia.close();
     }
-
+    
+    public static void agregarHabitacion(HttpServletRequest request) throws SQLException{
+        int numero = Integer.valueOf(request.getParameter("numero"));
+        String cadena = request.getParameter("tipo");
+        int tipo = Integer.valueOf(cadena.substring(0, 1));
+        
+        Statement sentencia = conexion.createStatement();
+        
+        String sql = "INSERT INTO habitaciones(numero, tipo) VALUES('" + numero + "','" + tipo +"')";
+        sentencia.executeUpdate(sql);
+        sentencia.close();
+    }
+    
+    public static void eliminarHabitacion(HttpServletRequest request) throws SQLException{
+        int idHabitacion = Integer.valueOf(request.getParameter("idHabitacion"));
+        
+        Statement sentencia = conexion.createStatement();
+        
+        String sql = "DELETE FROM habitaciones WHERE idHabitacion = '" + idHabitacion + "'";
+        sentencia.executeUpdate(sql);
+        sentencia.close();
+    }
 }

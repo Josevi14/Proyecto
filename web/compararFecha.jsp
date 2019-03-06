@@ -26,7 +26,6 @@
         obj.put("fechaEntrada", fechaEntrada);
         obj.put("fechaSalida", fechaSalida);
         jarray.add(obj);
-
     }
     
     out.print(jarray);

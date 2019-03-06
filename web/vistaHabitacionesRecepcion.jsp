@@ -28,7 +28,8 @@
         <td><%=tH.getNombre()%></td>
         <td><%=tH.getDescripcion()%></td>
         <td><%=tH.getPrecioDia()%></td>
-        <td><input type="submit" name="accion" value="Editar"/></td>
+        <td><input type="submit" name="accion" value="Editar"/>
+        <input type="submit" name="accion" value="Eliminar"/></td>
         <input type="hidden" name="idHabitacion" id="idHabitacion" value="<%=h.getIdHabitacion()%>"/>
         <input type="hidden" name="precioDia" id="precioDia" value="<%=tH.getPrecioDia()%>"/>
         <input type="hidden" name="accion" value="Reservar"/>

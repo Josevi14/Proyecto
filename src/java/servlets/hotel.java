@@ -9,7 +9,6 @@ import clases.Alquiler;
 import clases.AlquilerDB;
 import clases.Habitacion;
 import clases.HabitacionDB;
-import clases.Usuario;
 import clases.UsuarioDB;
 import clases.tipoHabitacionDB;
 import java.io.File;
@@ -27,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,6 +49,11 @@ import org.xml.sax.SAXException;
  *
  * @author josev
  */
+@MultipartConfig(location = "C:\\Users\\josev\\Desktop\\Copia de Seguridad Disco Duro\\Trabajos Informatica 1 GS\\Programacion\\Proyectos NetBeans\\HotelBellaVista\\build\\web\\imagenes",
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 5 * 5)
+
 public class hotel extends HttpServlet {
 
     private Connection conexion;
@@ -89,6 +94,7 @@ public class hotel extends HttpServlet {
         HttpSession sesion;
         String url = "";
         PrintWriter out = response.getWriter();
+        int tipoUsuario;
 
         sesion = request.getSession();
         accion = request.getParameter("accion");
@@ -131,13 +137,24 @@ public class hotel extends HttpServlet {
                     url = "/registro.jsp";
                     break;
                 case "REGISTRAR":
-                    try {
-                        UsuarioDB.registrar(request);
-                        url = "/acceso.jsp";
-                    } catch (SQLException ex) {
-                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
-                        url = "/error.jsp";
+                    if (sesion.getAttribute("tipo") != null) {
+                        try {
+                            UsuarioDB.registrarRecepcionista(request);
+                            url = "/menuAdmin.jsp";
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                            url = "/error.jsp";
+                        }
+                    } else {
+                        try {
+                            UsuarioDB.registrar(request);
+                            url = "/acceso.jsp";
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                            url = "/error.jsp";
+                        }
                     }
+
                     break;
                 case "RESERVAR":
                     try {
@@ -151,8 +168,8 @@ public class hotel extends HttpServlet {
                     url = "/misReservas.jsp";
                     break;
                 case "CERRARSESION":
-                    url = "/acceso.jsp";
                     request.getSession().invalidate();
+                    url = "/acceso.jsp";
                     break;
                 case "IMPORTARCOMOXML":
                     try {
@@ -165,8 +182,8 @@ public class hotel extends HttpServlet {
 
                     break;
                 case "VOLVER":
-                    int tipo = (int) sesion.getAttribute("tipo");
-                    switch (tipo) {
+                    tipoUsuario = (int) sesion.getAttribute("tipo");
+                    switch (tipoUsuario) {
                         case 1:
                             url = "/index.jsp";
                             break;
@@ -178,20 +195,82 @@ public class hotel extends HttpServlet {
                             break;
                     }
                     break;
+                case "ELIMINAR":
+                    tipoUsuario = (int) sesion.getAttribute("tipo");
+                    if (tipoUsuario == 2) {
+                        try {
+                            HabitacionDB.eliminarHabitacion(request);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        url = "/menuRecepcion.jsp";
+                    } else if (tipoUsuario == 3) {
+                        try {
+                            String mensaje = UsuarioDB.eliminarUsuario(request);
+                            sesion.setAttribute("mensaje", mensaje);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        url = "/menuAdmin.jsp";
+                    }
+
+                    break;
                 case "EDITAR":
-                    url = "/editarHabitacion.jsp";
+                    tipoUsuario = (int) sesion.getAttribute("tipo");
+                    if (tipoUsuario == 2) {
+                        url = "/editarHabitacion.jsp";
+                    } else if (tipoUsuario == 3) {
+                        url = "/editarUsuario.jsp";
+                    }
+                    break;
+                case "ACTUALIZAR":
+                    tipoUsuario = (int) sesion.getAttribute("tipo");
+                    if (tipoUsuario == 2) {
+                        try {
+                            HabitacionDB.actualizarHabitacion(request);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        url = "/menuRecepcion.jsp";
+                    } else if (tipoUsuario == 3) {
+                        try {
+                            UsuarioDB.actualizarUsuario(request);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        url = "/menuAdmin.jsp";
+                    }
+
                     break;
                 case "AGREGARHABITACION":
                     url = "/agregarHabitacion.jsp";
                     break;
-                case "ACEPTAR":
-
+                case "AÑADIR":
                     try {
-                        HabitacionDB.actualizarHabitacion(request);
+                        HabitacionDB.agregarHabitacion(request);
                     } catch (SQLException ex) {
                         Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     url = "/menuRecepcion.jsp";
+                    break;
+                case "AGREGARTIPOHABITACION":
+                    url = "/agregarTipoHabitacion.jsp";
+                    break;
+                case "AGREGAR":
+                    upload(request);
+
+                    try {
+                        tipoHabitacionDB.agregarTipoHabitacion(request);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    url = "/menuRecepcion.jsp";
+                    break;
+                case "AGREGARRECEPCIONISTA":
+                    url = "/registro.jsp";
+                    break;
+                case "GENERARPDF":
                     break;
             }
         }
@@ -271,7 +350,7 @@ public class hotel extends HttpServlet {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(ruta + "/pensiones/" + fichero));
+            StreamResult result = new StreamResult(new File(ruta + "/reservas/" + fichero));
 
             transformer.transform(source, result);
 
@@ -292,7 +371,7 @@ public class hotel extends HttpServlet {
 
             DocumentBuilder db = dbf.newDocumentBuilder();
 
-            org.w3c.dom.Document doc = db.parse(ruta + "/pensiones/" + fichero);
+            org.w3c.dom.Document doc = db.parse(ruta + "/reservas/" + fichero);
 
             NodeList alquiler = doc.getElementsByTagName("alquiler");
             for (int i = 0; i < alquiler.getLength(); i++) {
@@ -324,9 +403,9 @@ public class hotel extends HttpServlet {
 
         HttpSession sesion = request.getSession();
         try {
-            Part fichero = request.getPart("fichero");
-            fichero.write(fichero.getSubmittedFileName());
-            sesion.setAttribute("error", "Nombre:" + fichero.getName() + "Fichero:" + fichero.getSubmittedFileName());
+            Part imagen = request.getPart("imagen");
+            imagen.write(imagen.getSubmittedFileName());
+            sesion.setAttribute("imagen", imagen.getSubmittedFileName());
         } catch (IOException ex) {
             ok = false;
             sesion.setAttribute("error", ex.getMessage());

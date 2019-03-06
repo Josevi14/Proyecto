@@ -30,7 +30,8 @@
                     <td><input type="text" name="telefono" placeholder="Telefono"/></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="accion" value="Registrar"</td>
+                    <td><input type="submit" name="accion" value="Registrar"/>
+                    <input type="submit" name="accion" value="Volver"</td>
                 </tr>
             </table>
         </form>

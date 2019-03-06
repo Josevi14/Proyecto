@@ -22,5 +22,27 @@
         <title>Menu Admin</title>
     </head>
     <body>
+        
+        <form action="hotel" method="post">
+            <input type="submit" name="accion" value="Agregar Recepcionista"/>
+            <input type="submit" name="accion" value="Generar PDF"/>
+            <input type="submit" name="accion" value="Cerrar Sesion"/>
+        </form>
+        <%
+        if(session.getAttribute("mensaje") != null){
+            String mensaje = (String) session.getAttribute("mensaje");
+            out.print(mensaje);
+        }
+        %>
+        <table id="table">
+            <tr>
+                <th>Login</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Telefono</th>
+                <th>Tipo</th>
+            </tr>
+            <jsp:include page="vistaUsuarios.jsp"></jsp:include>
+        </table>
     </body>
 </html>

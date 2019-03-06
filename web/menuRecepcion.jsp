@@ -24,6 +24,7 @@
     <body>
         <form action="hotel" method="post">
             <input type="submit" name="accion" value="Agregar Habitacion"/>
+            <input type="submit" name="accion" value="Agregar Tipo Habitacion"/>
             <input type="submit" name="accion" value="Cerrar Sesion"/>
         </form>
         <table id="table">

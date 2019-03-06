@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -67,5 +69,19 @@ public class tipoHabitacionDB {
         precio = rs.getInt("precioDia");
         tipoHabitacion tipoHabitacion = new tipoHabitacion(id, nombre, descripcion, imagen, precio);
         return tipoHabitacion;
+    }
+    
+    public static void agregarTipoHabitacion(HttpServletRequest request) throws SQLException{
+        HttpSession sesion = request.getSession();
+        String nombre = request.getParameter("nombre");
+        String descripcion = request.getParameter("descripcion");
+        int precioDia = Integer.valueOf(request.getParameter("precioDia"));
+        String imagen = (String) sesion.getAttribute("imagen");
+        
+        Statement sentencia = conexion.createStatement();
+        
+        String sql = "INSERT INTO tipohabitacion(imagen, nombre, descripcion, precioDia) VALUES('" + imagen + "','" + nombre +"','" + descripcion + "','" + precioDia + "')";
+        sentencia.executeUpdate(sql);
+        sentencia.close();
     }
 }

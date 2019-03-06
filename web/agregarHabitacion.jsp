@@ -1,21 +1,19 @@
 <%-- 
-    Document   : editarHabitacion
-    Created on : 05-mar-2019, 17:21:37
+    Document   : agregarHabitacion
+    Created on : 05-mar-2019, 18:39:30
     Author     : josev
 --%>
 
-<%@page import="java.util.Iterator"%>
-<%@page import="clases.tipoHabitacion"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="clases.tipoHabitacionDB"%>
-<%@page import="java.io.File"%>
-<%@page import="servlets.hotel"%>
+<%@page import="clases.tipoHabitacion"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Editar Habitacion</title>
+        <title>Agregar Habitacion</title>
     </head>
     <body>
         <table>
@@ -49,12 +47,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="accion" value="Actualizar"/>
+                    <td><input type="submit" name="accion" value="Añadir"/>
                         <input type="submit" name="accion" value="Volver"/></td>
+                    
                     <input type="hidden" name="idHabitacion" value="<%=request.getParameter("idHabitacion")%>"/>
                 </tr>
             </form>
         </table>
-
     </body>
 </html>
