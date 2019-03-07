@@ -9,9 +9,17 @@ import clases.Alquiler;
 import clases.AlquilerDB;
 import clases.Habitacion;
 import clases.HabitacionDB;
+import clases.Usuario;
 import clases.UsuarioDB;
 import clases.tipoHabitacionDB;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfDocument;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigInteger;
@@ -19,6 +27,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,6 +50,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -199,7 +210,8 @@ public class hotel extends HttpServlet {
                     tipoUsuario = (int) sesion.getAttribute("tipo");
                     if (tipoUsuario == 2) {
                         try {
-                            HabitacionDB.eliminarHabitacion(request);
+                            String mensaje = HabitacionDB.eliminarHabitacion(request);
+                            sesion.setAttribute("mensaje", mensaje);
                         } catch (SQLException ex) {
                             Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -213,7 +225,6 @@ public class hotel extends HttpServlet {
                         }
                         url = "/menuAdmin.jsp";
                     }
-
                     break;
                 case "EDITAR":
                     tipoUsuario = (int) sesion.getAttribute("tipo");
@@ -271,10 +282,25 @@ public class hotel extends HttpServlet {
                     url = "/registro.jsp";
                     break;
                 case "GENERARPDF":
+                    try {
+                        ArrayList<Usuario> usuarios = UsuarioDB.leerUsuarios();
+                        try {
+                            generarPDF(response, usuarios);
+                        } catch (DocumentException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    url = "/menuAdmin.jsp";
+                    break;
+                case "COMPARARFECHA":
+                    url = "/compararFecha.jsp";
                     break;
             }
         }
-
         RequestDispatcher rd = request.getRequestDispatcher(url);
         rd.forward(request, response);
     }
@@ -413,40 +439,50 @@ public class hotel extends HttpServlet {
         return ok;
     }
 
-    /*public static void generarPDF(HttpServletResponse response, Usuario usuario) throws DocumentException, FileNotFoundException, IOException{
+    public static void generarPDF(HttpServletResponse response, ArrayList<Usuario> usuarios) throws DocumentException, FileNotFoundException, IOException {
         Document documento = new Document(PageSize.A4, 50, 50, 100, 72);
-        FileOutputStream ficheroPdf = new FileOutputStream(ruta+"usuarios"+File.separator+usuario.getLogin()+File.separator+"curriculum.pdf");
+        FileOutputStream ficheroPdf = new FileOutputStream(ruta + File.separator + "usuarios.pdf");
+        
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition", "attachment;filename=usuarios.pdf");
 
-        PdfWriter.getInstance(documento,ficheroPdf).setInitialLeading(20);
+        PdfWriter.getInstance(documento, ficheroPdf).setInitialLeading(20);
         documento.open();
-        documento.add(new Paragraph("Curriculum",
-                FontFactory.getFont("arial",   // fuente
-                22,                            // tamaño
-                Font.ITALIC)));
-        documento.add(new Paragraph("Nombre: "+usuario.getNombre()+" "+usuario.getApellidos()));
-        documento.add(new Paragraph("Edad: "+usuario.getEdad()));
-        documento.add(new Paragraph("Telefono: "+usuario.getTelefono()));
-        documento.add(new Paragraph("Direccion: "+usuario.getDireccion()));
-        documento.add(new Paragraph("Poblacion: "+usuario.getPoblacion()));
-        documento.add(new Paragraph("Provincia: "+usuario.getProvincia()));
+        Paragraph p = new Paragraph("Usuarios",
+                FontFactory.getFont("helvetica",
+                        24,
+                        Font.BOLDITALIC));
+        p.setAlignment("center");
+        documento.add(p);
         documento.add(new Paragraph(" "));
-        PdfPTable tabla = new PdfPTable(3);
-        tabla.addCell("Descripcion");
-        tabla.addCell("Fecha Inicio");
-        tabla.addCell("Fecha Fin");
-        ArrayList<Experiencia> experiencias = usuario.getExperiencia();
-        Iterator iterador;
-        iterador = experiencias.iterator();
-        while (iterador.hasNext()){
-             Experiencia experiencia=(Experiencia) iterador.next();
-             tabla.addCell(experiencia.getCaracteristicas());
-             tabla.addCell(experiencia.getFecha_inicio());
-             tabla.addCell(experiencia.getFecha_final());
+        documento.add(new Paragraph(" "));
+
+        PdfPTable tabla = new PdfPTable(5);
+        tabla.addCell("Login");
+        tabla.addCell("Nombre");
+        tabla.addCell("Apellidos");
+        tabla.addCell("Telefono");
+        tabla.addCell("Tipo");
+        Iterator it = usuarios.iterator();
+        while (it.hasNext()) {
+            Usuario usuario = (Usuario) it.next();
+            String tipo = null;
+            try {
+                tipo = UsuarioDB.consultarTipoUsuario(usuario);
+            } catch (SQLException ex) {
+                Logger.getLogger(hotel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            tabla.addCell(usuario.getLogin());
+            tabla.addCell(usuario.getNombre());
+            tabla.addCell(usuario.getApellidos());
+            tabla.addCell(Integer.toString(usuario.getTelefono()));
+            tabla.addCell(tipo);
         }
+
         documento.add(tabla);
         documento.close();
+    }
 
-    }*/
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -88,6 +88,22 @@ public class AlquilerDB {
         
         return existe;
     }
+    
+    public static boolean mostrarReservasHabitacion(HttpServletRequest request) throws SQLException {
+        boolean existe = false;
+        ResultSet rs;
+        Statement sentencia = conexion.createStatement();
+        String idHabitacion = request.getParameter("idHabitacion");
+        
+        String sql = "SELECT * FROM alquiler WHERE habitacion='" + idHabitacion + "'";
+        rs = sentencia.executeQuery(sql);
+        
+        if(rs.first()){
+            existe = true;
+        }
+        
+        return existe;
+    }
 
     public static Alquiler rowToAlquiler(ResultSet rs) throws SQLException {
         int id, costoTotal, habitacion;

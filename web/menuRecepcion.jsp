@@ -20,6 +20,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Menu Recepcion</title>
+        <link rel="stylesheet" type="text/css" href="estilos/index.css"/>
+
     </head>
     <body>
         <form action="hotel" method="post">
@@ -27,6 +29,12 @@
             <input type="submit" name="accion" value="Agregar Tipo Habitacion"/>
             <input type="submit" name="accion" value="Cerrar Sesion"/>
         </form>
+        <%
+            if (session.getAttribute("mensaje") != null) {
+                String mensaje = (String) session.getAttribute("mensaje");
+                out.print(mensaje);
+            }
+        %>
         <table id="table">
             <tr>
                 <th>Numero</th>

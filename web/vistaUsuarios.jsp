@@ -26,7 +26,7 @@
         <td><%=tipo%></td>
         <td><%if(usuario.getTipo() == 2){%><input type="submit" name="accion" value="Editar"/><%}%>
             <input type="submit" name="accion" value="Eliminar"/></td>
-        <input type="hidden" name="idUsuario" value="<%=usuario.getLogin()%>"/>
+        <input type="hidden" name="login" value="<%=usuario.getLogin()%>"/>
     </tr>
 </form>
 <%

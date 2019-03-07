@@ -16,6 +16,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Agregar Tipo Habitacion</title>
+        <link rel="stylesheet" type="text/css" href="estilos/index.css"/>
+
     </head>
     <body>
         <table>

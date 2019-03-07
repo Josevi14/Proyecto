@@ -24,8 +24,9 @@ function consultaFechas() {
     var fechaEntrada = new Date($("#fechaEntrada"+id).val()).getTime();
     var fechaSalida = new Date($("#fechaSalida"+id).val()).getTime();
     
-    $.post("compararFecha.jsp", {
-        idHabitacion: idHabitacion
+    $.post("hotel", {
+        idHabitacion: idHabitacion,
+        accion: "Comparar Fecha"
     }, function (result){
         comprobarFechas(id, fechaEntrada, fechaSalida, result);
     }, "json");

@@ -96,13 +96,20 @@ public class HabitacionDB {
         sentencia.close();
     }
     
-    public static void eliminarHabitacion(HttpServletRequest request) throws SQLException{
+    public static String eliminarHabitacion(HttpServletRequest request) throws SQLException{
         int idHabitacion = Integer.valueOf(request.getParameter("idHabitacion"));
-        
+        boolean existe = AlquilerDB.mostrarReservasHabitacion(request);
+        String mensaje = null;
         Statement sentencia = conexion.createStatement();
         
-        String sql = "DELETE FROM habitaciones WHERE idHabitacion = '" + idHabitacion + "'";
-        sentencia.executeUpdate(sql);
-        sentencia.close();
+        if(!existe){
+            String sql = "DELETE FROM habitaciones WHERE idHabitacion = '" + idHabitacion + "'";
+            sentencia.executeUpdate(sql);
+            sentencia.close();
+        } else {
+            mensaje = "No se puede borrar la habitacion, tiene usuarios con reserva";
+        }
+        
+        return mensaje;
     }
 }

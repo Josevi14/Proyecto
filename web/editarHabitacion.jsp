@@ -16,6 +16,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Editar Habitacion</title>
+        <link rel="stylesheet" type="text/css" href="estilos/index.css"/>
+
     </head>
     <body>
         <table>
@@ -43,7 +45,7 @@
                                 while (it.hasNext()) {
                                     tipoHabitacion tipo = (tipoHabitacion) it.next();
                             %><option><%=tipo.getId() + " " + tipo.getNombre()%></option><%
-                                    }
+                                }
                             %>
                         </select>
                     </td>
@@ -51,7 +53,7 @@
                 <tr>
                     <td><input type="submit" name="accion" value="Actualizar"/>
                         <input type="submit" name="accion" value="Volver"/></td>
-                    <input type="hidden" name="idHabitacion" value="<%=request.getParameter("idHabitacion")%>"/>
+                <input type="hidden" name="idHabitacion" value="<%=request.getParameter("idHabitacion")%>"/>
                 </tr>
             </form>
         </table>

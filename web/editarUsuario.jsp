@@ -10,6 +10,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Editar Usuario</title>
+        <link rel="stylesheet" type="text/css" href="estilos/index.css"/>
+
     </head>
     <body>
         <table>
@@ -38,7 +40,7 @@
                     <tr>
                         <td><input type="submit" name="accion" value="Actualizar"/></td>
                         <td><input type="submit" name="accion" value="Volver"/></td>
-                        <input type="hidden" name="idUsuario" value="<%=request.getParameter("idUsuario")%>"/>
+                    <input type="hidden" name="idUsuario" value="<%=request.getParameter("login")%>"/>
                     </tr>
                 </table>
             </form>

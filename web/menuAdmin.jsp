@@ -3,8 +3,8 @@
     String login;
     login = (String) session.getAttribute("usuario");
     tipo = (Integer) session.getAttribute("tipo");
-    
-    if(login == null || tipo != 3){
+
+    if (login == null || tipo != 3) {
         response.sendRedirect("acceso.jsp");
     }
 %>
@@ -20,19 +20,21 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Menu Admin</title>
+        <link rel="stylesheet" type="text/css" href="estilos/index.css"/>
+
     </head>
     <body>
-        
+
         <form action="hotel" method="post">
             <input type="submit" name="accion" value="Agregar Recepcionista"/>
             <input type="submit" name="accion" value="Generar PDF"/>
             <input type="submit" name="accion" value="Cerrar Sesion"/>
         </form>
         <%
-        if(session.getAttribute("mensaje") != null){
-            String mensaje = (String) session.getAttribute("mensaje");
-            out.print(mensaje);
-        }
+            if (session.getAttribute("mensaje") != null) {
+                String mensaje = (String) session.getAttribute("mensaje");
+                out.print(mensaje);
+            }
         %>
         <table id="table">
             <tr>
