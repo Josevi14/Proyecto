@@ -49,7 +49,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="accion" value="Añadir"/>
+                    <td><input type="submit" name="accion" value="Anadir"/>
                         <input type="submit" name="accion" value="Volver"/></td>
 
                 <input type="hidden" name="idHabitacion" value="<%=request.getParameter("idHabitacion")%>"/>

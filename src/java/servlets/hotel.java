@@ -104,7 +104,6 @@ public class hotel extends HttpServlet {
         String accion;
         HttpSession sesion;
         String url = "";
-        PrintWriter out = response.getWriter();
         int tipoUsuario;
 
         sesion = request.getSession();
@@ -256,7 +255,7 @@ public class hotel extends HttpServlet {
                 case "AGREGARHABITACION":
                     url = "/agregarHabitacion.jsp";
                     break;
-                case "AÑADIR":
+                case "ANADIR":
                     try {
                         HabitacionDB.agregarHabitacion(request);
                     } catch (SQLException ex) {
@@ -444,8 +443,8 @@ public class hotel extends HttpServlet {
         FileOutputStream ficheroPdf = new FileOutputStream(ruta + File.separator + "usuarios.pdf");
         
         response.setContentType("application/pdf");
-        response.setHeader("Content-disposition", "attachment;filename=usuarios.pdf");
-
+        
+        PdfWriter.getInstance(documento,response.getOutputStream()).setInitialLeading(20);
         PdfWriter.getInstance(documento, ficheroPdf).setInitialLeading(20);
         documento.open();
         Paragraph p = new Paragraph("Usuarios",
